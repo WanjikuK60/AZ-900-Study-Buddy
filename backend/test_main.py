@@ -156,3 +156,46 @@ def test_gemini_without_a_key_reports_not_configured(monkeypatch) -> None:
     response = client.post("/chat", json={"question": "Explain Azure regions"})
 
     assert response.status_code == 503
+
+
+def test_gemini_falls_back_to_second_model_when_busy(monkeypatch) -> None:
+    tried = []
+
+    def fake_post(url, **_kwargs):
+        tried.append(url)
+        if "busy-model" in url:
+            return main.httpx.Response(503, json={"error": {"message": "high demand"}}, request=main.httpx.Request("POST", url))
+        return main.httpx.Response(
+            200,
+            json={"candidates": [{"content": {"parts": [{"text": "Answer from the fallback."}]}}]},
+            request=main.httpx.Request("POST", url),
+        )
+
+    monkeypatch.setenv("AI_PROVIDER", "gemini")
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("GEMINI_MODEL", "busy-model")
+    monkeypatch.setenv("GEMINI_FALLBACK_MODEL", "spare-model")
+    monkeypatch.setattr(main.httpx, "post", fake_post)
+
+    response = client.post("/chat", json={"question": "Explain Azure regions"})
+
+    assert response.status_code == 200
+    assert response.json() == {"answer": "Answer from the fallback."}
+    assert [u.split("/models/")[1] for u in tried] == ["busy-model:generateContent", "spare-model:generateContent"]
+
+
+def test_gemini_does_not_retry_a_bad_key(monkeypatch) -> None:
+    tried = []
+
+    def fake_post(url, **_kwargs):
+        tried.append(url)
+        return main.httpx.Response(400, json={"error": {"message": "API key not valid"}}, request=main.httpx.Request("POST", url))
+
+    monkeypatch.setenv("AI_PROVIDER", "gemini")
+    monkeypatch.setenv("GEMINI_API_KEY", "bad-key")
+    monkeypatch.setenv("GEMINI_MODEL", "model-a")
+    monkeypatch.setenv("GEMINI_FALLBACK_MODEL", "model-b")
+    monkeypatch.setattr(main.httpx, "post", fake_post)
+
+    assert client.post("/chat", json={"question": "Explain Azure regions"}).status_code == 502
+    assert len(tried) == 1
