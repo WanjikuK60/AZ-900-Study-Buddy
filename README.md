@@ -1,6 +1,7 @@
 # Study Buddy — AZ-900
 
 - **🔗 Live demo:** https://wanjikuk60.github.io/az900-study-buddy/
+- **🎥 Video demo (53s):** https://wanjikuk60.github.io/az900-study-buddy/demo/study-buddy-demo.mp4
 - **📊 Pitch deck:** https://canva.link/iucey2onzyaa43h
 
 > Unofficial study aid. Not affiliated with or endorsed by Microsoft.
