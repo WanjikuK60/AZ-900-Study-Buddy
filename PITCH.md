@@ -20,7 +20,7 @@
 
 ## 5. Responsible build (about 30 seconds)
 
-“The website still works when the backend is unavailable. The optional FastAPI service keeps the Anthropic key server-side, limits requests, and labels generated answers. The current prompt is scoped to AZ-900 but does not retrieve source passages, so we tell learners to verify with Microsoft Learn instead of claiming the model is always right.”
+“The website still works when the backend is unavailable. The optional FastAPI service keeps the AI provider key server-side, limits requests, and labels generated answers. The current prompt is scoped to AZ-900 but does not retrieve source passages, so we tell learners to verify with Microsoft Learn instead of claiming the model is always right.”
 
 ## Close
 

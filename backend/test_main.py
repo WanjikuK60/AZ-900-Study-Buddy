@@ -104,3 +104,55 @@ def test_chat_cors_allows_the_github_pages_site() -> None:
 
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] == "https://wanjikuk60.github.io"
+
+
+def test_gemini_provider_sends_prompt_and_reads_answer(monkeypatch) -> None:
+    calls = []
+
+    def fake_post(url, headers, json, timeout):
+        calls.append({"url": url, "headers": headers, "json": json})
+        return main.httpx.Response(
+            200,
+            json={"candidates": [{"content": {"parts": [{"text": "A Gemini test answer."}]}}]},
+            request=main.httpx.Request("POST", url),
+        )
+
+    monkeypatch.setenv("AI_PROVIDER", "gemini")
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("GEMINI_MODEL", "test-model")
+    monkeypatch.setattr(main.httpx, "post", fake_post)
+
+    response = client.post(
+        "/chat", json={"question": "Explain Azure regions", "language": "sheng", "level": "beginner"}
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"answer": "A Gemini test answer."}
+    assert calls[0]["url"].endswith("/models/test-model:generateContent")
+    assert calls[0]["headers"] == {"x-goog-api-key": "test-key"}
+    assert "Selected language: sheng" in calls[0]["json"]["contents"][0]["parts"][0]["text"]
+    assert "Study Buddy" in calls[0]["json"]["systemInstruction"]["parts"][0]["text"]
+
+
+def test_gemini_errors_become_a_friendly_502(monkeypatch) -> None:
+    def fake_post(url, **_kwargs):
+        return main.httpx.Response(429, json={}, request=main.httpx.Request("POST", url))
+
+    monkeypatch.setenv("AI_PROVIDER", "gemini")
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("GEMINI_MODEL", "test-model")
+    monkeypatch.setattr(main.httpx, "post", fake_post)
+
+    response = client.post("/chat", json={"question": "Explain Azure regions"})
+
+    assert response.status_code == 502
+    assert "reviewed AZ-900 topic" in response.json()["detail"]
+
+
+def test_gemini_without_a_key_reports_not_configured(monkeypatch) -> None:
+    monkeypatch.setenv("AI_PROVIDER", "gemini")
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+
+    response = client.post("/chat", json={"question": "Explain Azure regions"})
+
+    assert response.status_code == 503
