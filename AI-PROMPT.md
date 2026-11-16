@@ -2,9 +2,9 @@
 
 ## Hybrid tutor behavior
 
-Study Buddy checks its 15 reviewed AZ-900 concept notes first. A matching question is answered locally without being sent to an AI provider. If there is no match and the optional backend is configured, the browser sends the question, selected language, and learner level to the Study Buddy FastAPI service; the service calls Anthropic's Messages API with its key held server-side. The answer is labeled **AI-generated · verify on Microsoft Learn**. Without a configured backend, the app stays static and explains that it could not answer.
+Study Buddy checks its 15 reviewed AZ-900 concept notes first. A matching question is answered locally without being sent to an AI provider. If there is no match and the optional backend is configured, the browser sends the question, selected language, and learner level to the Study Buddy FastAPI service; the service calls the configured AI provider (Google Gemini by default, or Anthropic's Messages API) with its key held server-side. The answer is labeled **AI-generated · verify on Microsoft Learn**. Without a configured backend, the app stays static and explains that it could not answer.
 
-The AI fallback is scoped by a system prompt to the public AZ-900 skills outline, but it is **not retrieval-augmented** and is not guaranteed to be accurate. It can send unrecognized learner questions to Anthropic. The interface discloses this before submission and warns learners not to enter personal or confidential information. Verify AI output against Microsoft Learn.
+The AI fallback is scoped by a system prompt to the public AZ-900 skills outline, but it is **not retrieval-augmented** and is not guaranteed to be accurate. It can send unrecognized learner questions to the AI provider; on Gemini's free tier, Google may use them to improve its products. The interface discloses this before submission and warns learners not to enter personal or confidential information. Verify AI output against Microsoft Learn.
 
 ## System prompt used by the backend
 

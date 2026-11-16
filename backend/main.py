@@ -6,6 +6,7 @@ from enum import Enum
 from threading import Lock
 
 import anthropic
+import httpx
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -118,48 +119,80 @@ def enforce_rate_limit(client: str) -> None:
             del _client_request_times[key]
 
 
-def generate_answer(payload: ChatRequest) -> str:
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    model = os.getenv("ANTHROPIC_MODEL")
-    if not api_key or not model:
-        raise HTTPException(
-            status_code=503,
-            detail="The AI service is not configured. Try a reviewed AZ-900 topic instead.",
-        )
+NOT_CONFIGURED = "The AI service is not configured. Try a reviewed AZ-900 topic instead."
+UNAVAILABLE = "The AI service could not answer right now. Try a reviewed AZ-900 topic instead."
+EMPTY = "The AI service returned no explanation. Try a reviewed AZ-900 topic instead."
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
+
+def user_message(payload: ChatRequest) -> str:
+    return (
+        f"Selected language: {payload.language.value}\n"
+        f"Learner level: {payload.level.value}\n"
+        f"Question: {payload.question}"
+    )
+
+
+def required_env(*names: str) -> list[str]:
+    values = [os.getenv(name) for name in names]
+    if not all(values):
+        raise HTTPException(status_code=503, detail=NOT_CONFIGURED)
+    return values
+
+
+def ask_anthropic(payload: ChatRequest) -> str:
+    api_key, model = required_env("ANTHROPIC_API_KEY", "ANTHROPIC_MODEL")
     client = anthropic.Anthropic(api_key=api_key, timeout=20.0, max_retries=0)
     try:
         response = client.messages.create(
             model=model,
             max_tokens=700,
             system=SYSTEM_PROMPT,
-            messages=[
-                {
-                    "role": "user",
-                    "content": (
-                        f"Selected language: {payload.language.value}\n"
-                        f"Learner level: {payload.level.value}\n"
-                        f"Question: {payload.question}"
-                    ),
-                }
-            ],
+            messages=[{"role": "user", "content": user_message(payload)}],
         )
     except anthropic.APIError as error:
         logger.warning("Anthropic request failed (%s)", type(error).__name__)
-        raise HTTPException(
-            status_code=502,
-            detail="The AI service could not answer right now. Try a reviewed AZ-900 topic instead.",
-        ) from error
+        raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
+    return "\n".join(block.text for block in response.content if hasattr(block, "text"))
 
-    answer = "\n".join(
-        block.text for block in response.content if hasattr(block, "text")
-    ).strip()
-    if not answer:
-        logger.warning("Anthropic returned no text content")
-        raise HTTPException(
-            status_code=502,
-            detail="The AI service returned no explanation. Try a reviewed AZ-900 topic instead.",
+
+def ask_gemini(payload: ChatRequest) -> str:
+    api_key, model = required_env("GEMINI_API_KEY", "GEMINI_MODEL")
+    body = {
+        "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
+        "contents": [{"role": "user", "parts": [{"text": user_message(payload)}]}],
+        "generationConfig": {"maxOutputTokens": 700},
+    }
+    try:
+        response = httpx.post(
+            GEMINI_URL.format(model=model),
+            headers={"x-goog-api-key": api_key},
+            json=body,
+            timeout=20.0,
         )
+        response.raise_for_status()
+        data = response.json()
+    except (httpx.HTTPError, ValueError) as error:
+        logger.warning("Gemini request failed (%s)", type(error).__name__)
+        raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
+
+    candidates = data.get("candidates") or [{}]
+    parts = candidates[0].get("content", {}).get("parts", [])
+    return "\n".join(part.get("text", "") for part in parts)
+
+
+PROVIDERS = {"anthropic": ask_anthropic, "gemini": ask_gemini}
+
+
+def generate_answer(payload: ChatRequest) -> str:
+    provider = PROVIDERS.get(os.getenv("AI_PROVIDER", "anthropic").strip().lower())
+    if provider is None:
+        raise HTTPException(status_code=503, detail=NOT_CONFIGURED)
+
+    answer = provider(payload).strip()
+    if not answer:
+        logger.warning("AI provider returned no text content")
+        raise HTTPException(status_code=502, detail=EMPTY)
     return answer[:6000]
 
 

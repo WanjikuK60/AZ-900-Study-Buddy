@@ -26,7 +26,7 @@ The GitHub Pages frontend is static and works without an account or backend. Rev
 - Presents 15 bite-sized concepts with a technical definition first, an explicitly labeled Kenyan everyday analogy, an exam reminder, and a related self-check.
 - Localizes the full interface in English and Kiswahili; topic explanations also offer beta Sheng.
 - Answers supported topic questions from reviewed study notes in English, Kiswahili, or beta Sheng before considering an AI fallback.
-- For unmatched questions, optionally calls a server-side Anthropic-backed FastAPI endpoint; the API key is never shipped to the browser. AI answers are labeled and should be verified on Microsoft Learn.
+- For unmatched questions, optionally calls a server-side FastAPI endpoint backed by Google Gemini's free tier (or Anthropic Claude, switchable with `AI_PROVIDER`); the API key is never shipped to the browser. AI answers are labeled and should be verified on Microsoft Learn.
 - Lets learners choose Beginner, Intermediate, or Exam-ready emphasis and request “Explain like I'm new.”
 - Includes filters, topic search, 15 original multiple-choice practice questions, feedback explaining why each distractor is incorrect, and a locally saved weak-topic review list.
 - Adapts for mobile screens and supports keyboard navigation and assistive technology.
@@ -39,14 +39,14 @@ The approach is **reviewed notes first, AI for unmatched questions**. The prompt
 
 ## Deploy the optional AI backend
 
-1. Create or select an Anthropic API account and choose a currently supported model ID. Do not share the API key in chat or commit it.
-2. In Render, create a new Blueprint from this repository and select `render.yaml`. The service root is `backend/`; Render installs the requirements and runs FastAPI. The blueprint prompts for `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL`.
+1. Create a free API key in [Google AI Studio](https://aistudio.google.com/apikey). No card is needed. Do not share the key in chat or commit it.
+2. In Render, create a new Blueprint from this repository. `render.yaml` deploys `backend/` on Render's free plan with `AI_PROVIDER=gemini` and `GEMINI_MODEL=gemini-3.5-flash-lite`, and prompts for `GEMINI_API_KEY`. To use Anthropic Claude instead, set `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL` in the service environment.
 3. In the Render service environment, set `ALLOWED_ORIGINS` to the exact frontend origins, for example `https://wanjikuk60.github.io`. Add local origins only if needed for development.
 4. After the service is healthy, check `https://YOUR-SERVICE.onrender.com/health`.
 5. Set `window.STUDY_BUDDY_API_URL` in [config.js](./config.js) to the backend base URL, with no `/chat` suffix, then publish the updated static site.
 6. Submit an unmatched AZ-900 question and confirm the answer is labeled as AI-generated. If the backend is unavailable, reviewed topics and the original quiz remain usable.
 
-The API key must be entered in Render's environment settings, never in `config.js`, the GitHub repository, or the browser. The included in-memory rate limit (5 AI questions per visitor and 20 overall per minute) is a basic demo safeguard, not production-grade abuse prevention; use provider spending limits and stronger rate limiting before broad public use. Learner questions sent to the backend are forwarded to Anthropic.
+The API key must be entered in Render's environment settings, never in `config.js`, the GitHub repository, or the browser. The included in-memory rate limit (5 AI questions per visitor and 20 overall per minute) is a basic demo safeguard, not production-grade abuse prevention; use provider spending limits and stronger rate limiting before broad public use. Learner questions sent to the backend are forwarded to the configured AI provider. On Gemini's free tier, Google may use submitted content to improve its products, and human reviewers may read it. Render's free plan sleeps when idle, so the first AI answer after a quiet spell can take up to a minute.
 
 The static frontend works with no backend configured. To run backend tests:
 
@@ -86,7 +86,7 @@ The outline can change. Always compare your study plan with the [current Microso
 
 ## Accuracy and safety
 
-Study Buddy is an independent, unofficial learning aid, not an official Microsoft product and not a guarantee of exam results. Quiz questions are original learning checks, not copied or recalled exam questions. Explanations are deliberately concise; analogies are memory aids, not exact technical equivalences. Review product details and service availability against Microsoft Learn, especially before an exam. The app does not request personal information. If the optional backend is configured, unmatched questions are sent to the backend and Anthropic; do not enter personal or confidential information.
+Study Buddy is an independent, unofficial learning aid, not an official Microsoft product and not a guarantee of exam results. Quiz questions are original learning checks, not copied or recalled exam questions. Explanations are deliberately concise; analogies are memory aids, not exact technical equivalences. Review product details and service availability against Microsoft Learn, especially before an exam. The app does not request personal information. If the optional backend is configured, unmatched questions are sent to the backend and its AI provider (Google Gemini on the free tier, which may use them to improve Google products); do not enter personal or confidential information.
 
 ## Source
 
