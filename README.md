@@ -1,4 +1,4 @@
-# Study Buddy — AZ-900, made clearer
+# Study Buddy — AZ-900
 
 - **🔗 Live demo:** https://wanjikuk60.github.io/az900-study-buddy/
 - **📊 Pitch deck:** https://canva.link/iucey2onzyaa43h
