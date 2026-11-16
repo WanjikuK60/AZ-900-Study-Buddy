@@ -368,33 +368,33 @@ const quizDetails = [
 ];
 
 const shengNotes = {
-  "cloud-computing": ["Cloud computing ni kutumia computing services kupitia internet ukiwahitaji, badala ya kununua na kusimamia kila server kivyako.", "Ni kama kutumia umeme wa KPLC bila kujenga power station kwako. Provider husimamia system; bill yako bado ina-derive kutoka usage na pricing.", "Kumbuka on-demand access, usage-based pricing, na serverless bado iko na servers zinasimamiwa na provider."],
-  "cloud-models": ["Public cloud hushare provider infrastructure kati ya customers. Private cloud ni ya organisation moja; hybrid huconnect public na private environments.", "Biashara inaweza run website public Azure huku ikiweka system sensitive kwa private environment. Chaguo inategemea security, control, cost na operations.", "Public, private na hybrid ni deployment models. Hybrid ina-combine environments mbili."],
-  "service-types": ["IaaS inakupatia virtual infrastructure u-configure; PaaS inamanage platform ya app; SaaS ni app iko ready kutumia. Provider hu-manage zaidi ukitoka IaaS kwenda SaaS.", "IaaS ni kama plot unajipangia, PaaS kiosk iko fitted, SaaS ni shop yenye bidhaa ready. Hii ni memory hook, si exact technical match.", "IaaS humpea customer control zaidi; kwa SaaS provider hu-manage sehemu mingi zaidi."],
-  "shared-responsibility": ["Cloud security ni teamwork. Provider hulinda parts za infrastructure; customer bado anawajibika kwa data, identities na settings anacontrol.", "Landlord ana-maintain building; wewe unalock shop na kulinda stock. Kwa managed service provider anashika kazi zaidi za infrastructure.", "Customer bado anawajibika kwa data na identities. Responsibilities hubadilika kulingana na service model."],
-  "cloud-benefits": ["Cloud inakusaidia kuongeza au kupunguza capacity kulingana na demand. Serverless inakuachia focus kwa code huku provider aki-manage servers.", "Matatu zinaweza ongezeka Friday jioni demand ikiwa juu. Hiyo ni example ya scaling tu; real workload si sawa kabisa na traffic.", "Scalability ni kubadilisha capacity; elasticity ni kurekebisha capacity demand ikibadilika. Cloud hai-guarantee reliability ama cheap cost yenyewe."],
-  "azure-hierarchy": ["Azure resource ni service moja. Resource groups huorganise resources, subscriptions hutoa management na billing boundary, management groups hupanga subscriptions mingi.", "Ni kama system ya shule: management group hupanga subscriptions; hizo huwa na resource groups na resources zake.", "Order ni management groups → subscriptions → resource groups → resources."],
-  "regions-zones": ["Region ni geographic area ya datacenters; availability zones ni physical locations tofauti ndani ya region inayosupport zones.", "Branches za Nairobi na Mombasa zina geographic separation; branches tofauti Nairobi ni mfano tu wa kuelewa zones.", "Region si zone. Zone support hutegemea region na service; check availability na design requirements."],
-  "compute": ["Virtual machine ni computer virtual una-control zaidi; container hupackage app na dependencies; Functions hu-run code kwa events bila wewe ku-manage server infrastructure.", "VM ni room unapanga; container ni kit ume-pack unaweza move; function ni service inafanya task moja kitu fulani ikitokea.", "Chagua compute kulingana na control, portability, management na workload pattern."],
-  "networking": ["VNet ni private network boundary ya Azure resources. Subnets hugawa network, peering huconnect VNets, VPN hutumia encrypted internet tunnel; ExpressRoute ni private connection kupitia provider.", "VNet ni private roads, subnet ni neighborhood, gateway ni controlled route kati ya networks.", "Public endpoint inafikiwa kupitia internet; private endpoint hutumia private IP kwa supported service."],
-  "storage": ["Azure Storage iko na Blob za object data, Files za file shares, Queues za messages na Tables za NoSQL key-value data.", "Group inaweza weka picha kwa blobs, shared documents kwa file share, na queue ipitishe kazi kati ya parts za app.", "Chagua storage na redundancy kulingana na data, access pattern, availability na cost."],
-  "identity-security": ["Authentication hucheck wewe ni nani; authorization huamua unaweza fanya nini. Entra ID husimamia cloud identity, RBAC hutoa permissions kwa Azure resources, MFA huongeza check ingine.", "Badge huonyesha wewe ni nani; role kazini huamua rooms unaingia. MFA inaongeza verification ingine.", "Authentication si authorization. Tumia least privilege na ujue identity gani inapata access gani."],
-  "cost-management": ["Azure cost inategemea resource, region, usage na pricing. Calculator hukadiria; Cost Management husaidia kucheck actual na forecast spending.", "Kama shop unaestimate kodi na umeme, halafu ucheck bill kila mwezi. Tags husaidia kupanga report; hazilimit bill.", "Cloud haimaanishi cheap automatically. Tag ni metadata, si budget cap."],
-  "governance-compliance": ["Azure Policy hu-audit au enforce rules. Resource lock husaidia kuzuia baadhi ya deletion ama changes. Purview husaidia data governance kwa sources zinasupport.", "Shule inaweka rule kila class iwe na emergency exit, halafu inacheck. Lock ni guard ya kuzuia resource muhimu ifutwe accident.", "Policy hucheck rules; lock hulinda dhidi ya operations fulani. Hakuna inaswap identity permissions."],
-  "management-tools": ["Azure portal ni web interface; CLI na PowerShell ni command-line tools. ARM ni deployment na management service; ARM templates hueleza infrastructure kama code.", "Portal ni kujaza form mwenyewe; script ni recipe inaweza repeat. IaC husaidia deploy environments consistent.", "ARM ndiyo management layer; ARM template ni declarative description ya resources."],
-  "monitoring": ["Azure Monitor hukusanya na kuchambua monitoring data. Alerts hutoa notification; Service Health huripoti Azure service issues; Advisor hutoa recommendations.", "Mwendeshaji wa matatu anaweza track gari, apate alert issue ikitokea, na apewe recommendation ya maintenance.", "Service Health ni service events zinaweza ku-affect resources zako; Advisor ni recommendations."]
+  "cloud-computing": ["Cloud computing ni kutumia computing services kwa internet ukiitaji tu, badala ya kununua na kuhandle kila server kwako.", "Ni kama stima ya KPLC: hujengi power station base, unatumia tu. Provider anahandle system; bill yako inafuata usage na pricing.", "Shika hii: on-demand access, unalipa venye umetumia, na hata serverless bado iko na servers, ni provider ndio anazihandle."],
+  "cloud-models": ["Public cloud ni infrastructure ya provider wasee wengi wanashare. Private cloud ni ya organisation moja tu; hybrid inaunganisha public na private.", "Biashara inaweza host website kwa public Azure, alafu system sensitive ibaki kwa private environment. Unachagua kulingana na security, control, doh na operations.", "Public, private na hybrid ni deployment models. Hybrid ndio inachanganya environments mbili."],
+  "service-types": ["IaaS inakupea virtual infrastructure uji-configure; PaaS inakuhandlia platform ya app; SaaS ni app iko ready kutumia. Ukitoka IaaS kuenda SaaS, provider anashika kazi zaidi.", "IaaS ni kama plot unajijengea, PaaS ni kibanda kiko fitted tayari, SaaS ni duka iko na stock ready. Hii ni ya kukumbuka tu, si exact technical match.", "IaaS inampea customer control zaidi; kwa SaaS, provider ndio anahandle mingi."],
+  "shared-responsibility": ["Cloud security ni teamwork. Provider analinda parts za infrastructure; wewe bado unashika data, identities na settings unacontrol.", "Landlord anamaintain building; wewe ndio unafunga duka na kulinda stock yako. Kwa managed service, provider anachukua kazi zaidi ya infrastructure.", "Customer bado ndio ana responsibility ya data na identities. Responsibilities zinachange kulingana na service model."],
+  "cloud-benefits": ["Cloud inakuwezesha kuongeza ama kupunguza capacity venye demand iko. Serverless inakuachia focus kwa code, provider anahandle servers.", "Ni kama mathree zinaongezwa Friday jioni demand ikipanda. Hii ni mfano wa scaling tu; real workload si sawa kabisa na traffic ya stage.", "Scalability ni kubadilisha capacity; elasticity ni kuadjust capacity demand ikichange. Cloud yenyewe haiguarantee reliability ama bei poa."],
+  "azure-hierarchy": ["Azure resource ni service moja. Resource groups zinaorganize resources, subscriptions ni boundary ya management na billing, management groups zinapanga subscriptions mingi.", "Ni kama shule: management group inapanga subscriptions; hizo ziko na resource groups, na resource groups ziko na resources zao.", "Order ni management groups → subscriptions → resource groups → resources."],
+  "regions-zones": ["Region ni area fulani ya datacenters; availability zones ni locations tofauti physically ndani ya region inasupport zones.", "Branch ya Nairobi na ya Mombasa ziko mbali kigeografia; branches tofauti ndani ya Nairobi ni mfano tu wa kuelewa zones.", "Region si zone. Kama zone inasupportiwa inategemea region na service; checki availability na design requirements."],
+  "compute": ["Virtual machine ni computer ya virtual unacontrol zaidi; container inapack app pamoja na dependencies zake; Functions zinarun code event ikitokea bila wewe kuhandle servers.", "VM ni room umerent na unapanga venye unataka; container ni kit umepack unaweza hama nayo; function ni msee anafanya task moja tu kitu fulani ikitokea.", "Chagua compute kulingana na control, portability, management na pattern ya workload."],
+  "networking": ["VNet ni private network boundary ya Azure resources. Subnets zinagawanya network, peering inaunganisha VNets, VPN inatumia encrypted tunnel kwa internet; ExpressRoute ni private connection kupitia provider.", "VNet ni barabara private za estate, subnet ni court moja ndani, gateway ni gate inacontrol nani anaingia ama kutoka.", "Public endpoint inafikiwa kwa internet; private endpoint inatumia private IP kwa service inasupport."],
+  "storage": ["Azure Storage iko na Blob za object data, Files za file shares, Queues za messages, na Tables za NoSQL key-value data.", "Mbogi inaweza weka picha kwa blobs, documents za kushare kwa file share, na queue ipitishe kazi kati ya parts za app.", "Chagua storage na redundancy kulingana na data, access pattern, availability na cost."],
+  "identity-security": ["Authentication inacheck wewe ni nani; authorization inaamua unaruhusiwa kufanya nini. Entra ID inahandle cloud identity, RBAC inapeana permissions kwa Azure resources, MFA inaongeza check ingine.", "Badge inaonyesha wewe ni nani; role yako job inaamua rooms unaingia. MFA ni kama kuulizwa code ya pili kwa simu.", "Authentication si authorization. Tumia least privilege na ujue identity gani iko na access ya nini."],
+  "cost-management": ["Cost ya Azure inategemea resource, region, usage na pricing. Calculator inakupea estimate; Cost Management inakusaidia kucheck spending halisi na forecast.", "Ni kama mwenye duka anaestimate rent na stima, alafu anacheck bill kila mwezi. Tags zinasaidia kupanga reports; hazilimit bill.", "Cloud si automatically cheap. Tag ni metadata, si budget cap."],
+  "governance-compliance": ["Azure Policy inaaudit ama inaenforce rules. Resource lock inasaidia kuzuia deletion ama changes fulani. Purview inasaidia data governance kwa sources zinasupport.", "Shule inaweka rule kila class iwe na emergency exit, alafu inacheck. Lock ni kama guard anazuia resource muhimu isifutwe kimakosa.", "Policy inacheck rules; lock inalinda dhidi ya operations fulani. Hakuna kati ya hizo inachukua nafasi ya identity permissions."],
+  "management-tools": ["Azure portal ni web interface; CLI na PowerShell ni command-line tools. ARM ni deployment na management service; ARM templates zinaeleza infrastructure kama code.", "Portal ni kujaza form mwenyewe; script ni recipe unaweza rudia. IaC inasaidia kudeploy environments zikiwa consistent.", "ARM ndio management layer; ARM template ni declarative description ya resources."],
+  "monitoring": ["Azure Monitor inacollect na kuchambua monitoring data. Alerts zinakupea notification; Service Health inaripoti issues za Azure services; Advisor inapeana recommendations.", "Mwenye mathree anaweza track gari, apate alert kukiwa na shida, na apewe recommendation ya service.", "Service Health ni events za Azure services zinaweza affect resources zako; Advisor ni recommendations."]
 };
 
 const shengQuiz = [
-  { prompt: "Ni statement gani inaeleza consumption-based cloud model fiti?", options: ["Lipa kulingana na usage ya resources", "Nunua kila server kabla ya kuanza", "Lipa fixed bila kujali usage", "Provider ndiye owner wa data"], explanation: "Model hulipisha kulingana na services na resources umetumia, kulingana na pricing rules." },
-  { prompt: "Ni cloud model gani hucombine public na private environment?", options: ["Public", "Private", "Hybrid", "Serverless"], explanation: "Hybrid cloud huunganisha public na private environments." },
-  { prompt: "Ni service model gani hukupatia control mingi kwa virtual infrastructure?", options: ["SaaS", "PaaS", "IaaS", "DNS"], explanation: "IaaS hukupatia customer control zaidi kuliko PaaS ama SaaS." },
-  { prompt: "Ni order gani iko sawa kwa Azure management hierarchy, broad hadi specific?", options: ["Resources → resource groups → subscriptions → management groups", "Management groups → subscriptions → resource groups → resources", "Subscriptions → management groups → resources → resource groups", "Resource groups → resources → management groups → subscriptions"], explanation: "Management groups hupanga subscriptions, hizo huwa na resource groups, nazo huwa na resources." },
-  { prompt: "Availability zone ni nini?", options: ["Billing scope ya subscriptions nyingi", "Physical location tofauti ndani ya Azure region inayosupport", "Private cloud model", "Azure storage account"], explanation: "Ni physical location tofauti ndani ya Azure region inayoisupport." },
-  { prompt: "Ni Azure service gani hutumika kuhifadhi unstructured object data kama picha?", options: ["Azure Blob Storage", "Azure Policy", "Azure VPN Gateway", "Microsoft Entra ID"], explanation: "Azure Blob Storage imekusudiwa kuhifadhi object data mingi." },
-  { prompt: "Azure RBAC husaidia manage nini?", options: ["Azure resource permissions kwa scope", "Mahali datacenter iko", "Bei ya kila Azure service", "Format ya storage files"], explanation: "Azure RBAC hutoa roles kwa identities ndani ya scope ili kudhibiti access kwa resources." },
-  { prompt: "Ni tool gani inaweza audit ama enforce organizational rules kwa Azure resources?", options: ["Azure Policy", "Azure Files", "Azure DNS", "Azure Functions"], explanation: "Azure Policy hu-evaluate resources dhidi ya rules na inaweza audit au enforce supported requirements." },
-  { prompt: "Ni service gani hutoa recommendations za kuboresha Azure configuration?", options: ["Azure Advisor", "Azure Files", "Azure DNS", "Azure Virtual Network"], explanation: "Azure Advisor huchambua configuration na usage, halafu hutoa recommendations." }
+  { prompt: "Ni statement gani inaeleza fiti consumption-based cloud model?", options: ["Unalipa venye umetumia resources", "Unanunua kila server kabla ya kuanza", "Unalipa fixed hata kama hutumii", "Provider ndio owner wa data"], explanation: "Model hii inakuchaji kulingana na services na resources umetumia, kufuata pricing rules." },
+  { prompt: "Ni cloud model gani inachanganya public na private environment?", options: ["Public", "Private", "Hybrid", "Serverless"], explanation: "Hybrid cloud inaunganisha public na private environments." },
+  { prompt: "Ni service model gani inakupea control mingi ya virtual infrastructure?", options: ["SaaS", "PaaS", "IaaS", "DNS"], explanation: "IaaS inakupea control zaidi kuliko PaaS ama SaaS." },
+  { prompt: "Ni order gani iko sawa kwa Azure management hierarchy, kutoka broad hadi specific?", options: ["Resources → resource groups → subscriptions → management groups", "Management groups → subscriptions → resource groups → resources", "Subscriptions → management groups → resources → resource groups", "Resource groups → resources → management groups → subscriptions"], explanation: "Management groups zinapanga subscriptions, hizo ziko na resource groups, na hizo ziko na resources." },
+  { prompt: "Availability zone ni nini?", options: ["Billing scope ya subscriptions mingi", "Location tofauti physically ndani ya Azure region inasupport zones", "Private cloud model", "Azure storage account"], explanation: "Ni location tofauti physically ndani ya Azure region inasupport zones." },
+  { prompt: "Ni Azure service gani unatumia kuweka unstructured object data kama picha?", options: ["Azure Blob Storage", "Azure Policy", "Azure VPN Gateway", "Microsoft Entra ID"], explanation: "Azure Blob Storage imeundwa kuweka object data mingi." },
+  { prompt: "Azure RBAC inasaidia kuhandle nini?", options: ["Permissions za Azure resources kwa scope", "Datacenter iko wapi", "Bei ya kila Azure service", "Format ya storage files"], explanation: "Azure RBAC inapeana roles kwa identities ndani ya scope, ndio access ya resources icontroliwe." },
+  { prompt: "Ni tool gani inaweza audit ama enforce rules za organisation kwa Azure resources?", options: ["Azure Policy", "Azure Files", "Azure DNS", "Azure Functions"], explanation: "Azure Policy inacheck resources dhidi ya rules na inaweza audit ama enforce requirements zinasupportiwa." },
+  { prompt: "Ni service gani inakupea recommendations za kuimprove Azure configuration?", options: ["Azure Advisor", "Azure Files", "Azure DNS", "Azure Virtual Network"], explanation: "Azure Advisor inacheck configuration na usage, alafu inakupea recommendations." }
 ];
 
 quizDetails.push(
@@ -407,12 +407,12 @@ quizDetails.push(
 );
 
 shengQuiz.push(
-  { prompt: "Elasticity kwa cloud ina-mean nini?", options: ["Resources zinaadjust demand ikichange", "Resource lazima ibaki fixed", "Kila workload inakuwa highly available automatically", "Customer anaacha kusimamia data"], explanation: "Elasticity ni kurekebisha capacity demand ikibadilika. Workload lazima iwe designed na configured fiti." },
-  { prompt: "Container kawaida hupackage vitu gani?", options: ["App na dependencies zake", "Azure region nzima", "Billing boundary ya subscriptions", "Identity na MFA methods"], explanation: "Container hupackage app na dependencies zake ili deployment ikuwe consistent." },
-  { prompt: "Private endpoint hutumia nini kuconnect privately kwa Azure service?", options: ["Private IP kwa virtual network", "Public web address pekee", "Resource lock", "Management group"], explanation: "Hutumia private IP ndani ya virtual network kwa service inasupport." },
-  { prompt: "Azure resource tags husaidia nini?", options: ["Kuorganise na kuripoti resources na costs", "Kuzima spending automatically", "Kusubstitute RBAC", "Ku-guarantee availability"], explanation: "Tags ni metadata za kuorganise resources na kuchambua costs; hazizimi spending zenyewe." },
-  { prompt: "ARM template hufanya nini?", options: ["Ku-describe resources kwa declarative deployment", "Ku-guarantee exact price", "Kusubstitute identity provider", "Kustore app images"], explanation: "Ni declarative description ya resources za ku-deploy; ARM husimamia deployment na management." },
-  { prompt: "Kwa cloud services, nani bado anawajibika kwa data na identities zake?", options: ["Customer", "Internet provider", "Azure region", "Cloud provider pekee"], explanation: "Customer bado anawajibika kwa data na identities kwa cloud service models zote." }
+  { prompt: "Elasticity kwa cloud inamaanisha nini?", options: ["Resources zinaadjust demand ikichange", "Resource lazima ibaki fixed", "Kila workload inakuwa highly available automatically", "Customer anawacha kuhandle data"], explanation: "Elasticity ni kuadjust capacity demand ikichange. Workload bado lazima idesigniwe na iconfiguriwe fiti." },
+  { prompt: "Container kawaida inapack nini?", options: ["App na dependencies zake", "Azure region mzima", "Billing boundary ya subscriptions", "Identity na MFA methods"], explanation: "Container inapack app na dependencies zake, ndio deployment iwe consistent kila mahali." },
+  { prompt: "Private endpoint inatumia nini kuconnect privately kwa Azure service?", options: ["Private IP kwa virtual network", "Public web address peke yake", "Resource lock", "Management group"], explanation: "Inatumia private IP ndani ya virtual network kwa service inasupport." },
+  { prompt: "Azure resource tags zinasaidia na nini?", options: ["Kuorganize na kuripoti resources na costs", "Kuzima spending automatically", "Kuchukua nafasi ya RBAC", "Kuguarantee availability"], explanation: "Tags ni metadata za kuorganize resources na kuchambua costs; hazizimi spending zenyewe." },
+  { prompt: "ARM template inafanya nini?", options: ["Inadescribe resources kwa declarative deployment", "Inaguarantee bei exact", "Inachukua nafasi ya identity provider", "Inastore app images"], explanation: "Ni declarative description ya resources za kudeploy; ARM ndio inahandle deployment na management." },
+  { prompt: "Kwa cloud services, nani bado ana responsibility ya data na identities zake?", options: ["Customer", "Internet provider", "Azure region", "Cloud provider peke yake"], explanation: "Customer bado ndio ana responsibility ya data na identities kwa cloud service models zote." }
 );
 
 const wrongOptionReasons = {
@@ -768,9 +768,9 @@ const copy = {
     privacyNotice: "Notes zilizokaguliwa hujibu concepts zinazojulikana kwanza. AI ikiwa imewekwa, maswali zingine plus language na study level uliyochagua hutumwa kwa server ya Study Buddy na Anthropic. Majibu ya AI zinaweza kuwa wrong; verify kwa Microsoft Learn. Usiweke personal ama confidential info.",
     aiLabel: "AI-generated · verify kwa Microsoft Learn",
     aiLoading: "Nacheki na AI tutor…",
-    aiError: "AI tutor haipatikani sai. Jaribu topic ya AZ-900 imecheckiwa.",
-    welcome: "Niaje! Naweza kusaidia concepts za Azure zikae clear. Unataka kujua gani?",
-    notFound: "Sina note verified ya hilo bado. Jaribu topic ya AZ-900 au uchague card kwa library.",
+    aiError: "AI tutor haipatikani sai. Jaribu topic ya AZ-900 iliyocheckiwa.",
+    welcome: "Niaje! Mimi ni Study Buddy. Nikusaidie concepts za Azure zikae clear. Unataka kujua nini?",
+    notFound: "Sina note iliyocheckiwa ya hiyo bado. Jaribu topic ingine ya AZ-900 ama uchague card kwa library.",
     explanation: "Maana yake",
     example: "Mfano ya huku",
     exam: "AZ-900 tip",
@@ -783,7 +783,7 @@ const copy = {
     examFocus: "Kumbuka key difference na connect na public AZ-900 skills outline.",
     quickCheck: "Fungua practice question inahusiana",
     wrongOptions: "Mbona options ingine si correct",
-    weakEmpty: "Jibu quiz questions kadhaa upate topic za kurevise.",
+    weakEmpty: "Jibu quiz questions kadhaa ndio upate topics za kurevise.",
     weakSummary: "zimekosewa",
     retryTopic: "Rudia hii topic",
     askAbout: "Uliza Study Buddy",
@@ -791,15 +791,15 @@ const copy = {
     next: "Next question",
     finish: "Ona results",
     restart: "Try tena",
-    correct: "Sawa kabisa!",
-    incorrect: "Bado kidogo.",
+    correct: "Fiti kabisa!",
+    incorrect: "Karibu! Ona mbona hapa chini.",
     correctCount: "correct",
     answeredNone: "Bado hakuna swali umejibu",
     answeredSome: "maswali umejibu",
     complete: "Quiz imeisha!",
     resetDone: "Progress ya Study Buddy kwa device hii imefutwa.",
-    resetCancel: "Reset imecancel.",
+    resetCancel: "Reset imecancelliwa.",
     resetConfirm: "Ufute progress ya Study Buddy kwa device hii?",
-    storageWarning: "Progress haikuweza kusave kwa browser hii."
+    storageWarning: "Progress haikusave kwa browser hii."
   }
 };
