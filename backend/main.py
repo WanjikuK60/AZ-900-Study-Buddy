@@ -156,30 +156,44 @@ def ask_anthropic(payload: ChatRequest) -> str:
     return "\n".join(block.text for block in response.content if hasattr(block, "text"))
 
 
+# Google answers 429 (quota) or 5xx (busy) when the free tier is under load; the next model may still have room.
+GEMINI_RETRY_STATUSES = {429, 500, 503}
+
+
+def call_gemini(model: str, api_key: str, body: dict) -> dict:
+    response = httpx.post(
+        GEMINI_URL.format(model=model),
+        headers={"x-goog-api-key": api_key},
+        json=body,
+        timeout=20.0,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
 def ask_gemini(payload: ChatRequest) -> str:
     api_key, model = required_env("GEMINI_API_KEY", "GEMINI_MODEL")
+    models = [model] + [m for m in [os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.1-flash-lite").strip()] if m and m != model]
     body = {
         "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
         "contents": [{"role": "user", "parts": [{"text": user_message(payload)}]}],
         "generationConfig": {"maxOutputTokens": 700},
     }
-    try:
-        response = httpx.post(
-            GEMINI_URL.format(model=model),
-            headers={"x-goog-api-key": api_key},
-            json=body,
-            timeout=20.0,
-        )
-        response.raise_for_status()
-        data = response.json()
-    except httpx.HTTPStatusError as error:
-        # Google's error body names the cause (bad key, unknown model, quota) and never echoes the key.
-        reason = error.response.text[:300].replace("\n", " ")
-        logger.warning("Gemini returned HTTP %s: %s", error.response.status_code, reason)
-        raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
-    except (httpx.HTTPError, ValueError) as error:
-        logger.warning("Gemini request failed (%s)", type(error).__name__)
-        raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
+
+    for attempt, current in enumerate(models, start=1):
+        try:
+            data = call_gemini(current, api_key, body)
+            break
+        except httpx.HTTPStatusError as error:
+            # Google's error body names the cause (bad key, unknown model, quota) and never echoes the key.
+            status = error.response.status_code
+            reason = error.response.text[:300].replace("\n", " ")
+            logger.warning("Gemini %s returned HTTP %s: %s", current, status, reason)
+            if status not in GEMINI_RETRY_STATUSES or attempt == len(models):
+                raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
+        except (httpx.HTTPError, ValueError) as error:
+            logger.warning("Gemini %s request failed (%s)", current, type(error).__name__)
+            raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
 
     candidates = data.get("candidates") or [{}]
     parts = candidates[0].get("content", {}).get("parts", [])
