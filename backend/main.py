@@ -172,6 +172,11 @@ def ask_gemini(payload: ChatRequest) -> str:
         )
         response.raise_for_status()
         data = response.json()
+    except httpx.HTTPStatusError as error:
+        # Google's error body names the cause (bad key, unknown model, quota) and never echoes the key.
+        reason = error.response.text[:300].replace("\n", " ")
+        logger.warning("Gemini returned HTTP %s: %s", error.response.status_code, reason)
+        raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
     except (httpx.HTTPError, ValueError) as error:
         logger.warning("Gemini request failed (%s)", type(error).__name__)
         raise HTTPException(status_code=502, detail=UNAVAILABLE) from error
