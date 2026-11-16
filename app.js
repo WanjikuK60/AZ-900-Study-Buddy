@@ -304,24 +304,37 @@ function createAnswerBlock(topic) {
   return answer;
 }
 
+// Broad words that appear in many questions. On their own they are not enough to pick a topic.
+const GENERIC_KEYWORDS = new Set([
+  "cloud", "resource", "security", "file", "table", "network", "benefits", "policy",
+  "region", "zones", "availability", "reliability", "storage", "compute", "monitor", "portal", "eneo"
+]);
+const IGNORED_TITLE_WORDS = new Set(["azure", "cloud", "and", "the", "with"]);
+// A reviewed note is used only when the question clearly points at a topic; otherwise the AI tutor answers.
+const MIN_TOPIC_SCORE = 3;
+
 function findTopic(question) {
-  const normalized = question.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, " ");
+  // Pad with spaces so " keyword " only matches whole words ("arm" no longer matches "alarm").
+  const padded = ` ${question.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, " ").replace(/\s+/g, " ")} `;
+  const has = phrase => padded.includes(` ${phrase} `);
   let best = null;
   let bestScore = 0;
   for (const topic of topics) {
     let score = 0;
     for (const keyword of topic.keywords) {
-      if (normalized.includes(keyword)) score += keyword.includes(" ") ? 3 : 2;
+      if (!has(keyword)) continue;
+      if (keyword.includes(" ")) score += 4;
+      else score += GENERIC_KEYWORDS.has(keyword) ? 1 : 3;
     }
-    for (const word of topic.title.toLowerCase().split(/\s+/)) {
-      if (word.length > 3 && normalized.includes(word)) score += 1;
+    for (const word of topic.title.toLowerCase().split(/[\s,&-]+/)) {
+      if (word.length > 3 && !IGNORED_TITLE_WORDS.has(word) && has(word)) score += 1;
     }
     if (score > bestScore) {
       best = topic;
       bestScore = score;
     }
   }
-  return best;
+  return bestScore >= MIN_TOPIC_SCORE ? best : null;
 }
 
 function answerQuestion(question) {
