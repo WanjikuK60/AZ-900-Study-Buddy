@@ -199,3 +199,10 @@ def test_gemini_does_not_retry_a_bad_key(monkeypatch) -> None:
 
     assert client.post("/chat", json={"question": "Explain Azure regions"}).status_code == 502
     assert len(tried) == 1
+
+
+def test_system_prompt_guides_sheng_and_skips_greetings() -> None:
+    prompt = " ".join(main.SYSTEM_PROMPT.split())
+    assert "no greeting" in prompt
+    assert "Use only Latin letters" in prompt
+    assert "Sheng: casual Nairobi speech" in prompt
