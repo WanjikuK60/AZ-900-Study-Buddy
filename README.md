@@ -1,8 +1,7 @@
 # Study Buddy — AZ-900, made clearer
 
 - **🔗 Live demo:** https://wanjikuk60.github.io/az900-study-buddy/
-- **🎥 Video demo:** (add link)
-- **📊 Pitch deck:** (add link)
+- **📊 Pitch deck:** https://www.canva.com/d/yZtbOclS52LCbDQ
 
 > Unofficial study aid. Not affiliated with or endorsed by Microsoft.
 
@@ -18,7 +17,7 @@ python -m http.server 8000
 
 Then visit <http://localhost:8000>.
 
-The GitHub Pages frontend is static and works without an account or backend. Reviewed topic answers and practice remain available without AI. **Live AI is not currently configured on the public demo**; unmatched questions use the offline fallback. The backend is implemented and its automated tests pass locally (`python -m pytest backend/test_main.py -q`); these tests mock the model and do not verify a live AI API connection. Cloud deployment is the next step. Study history is stored in the browser's local storage; use **Reset progress** to clear it.
+The GitHub Pages frontend is static and works without an account or backend. Reviewed topic answers and practice remain available without AI. **Live AI is not currently configured on the public demo**; unmatched questions use the offline fallback. The backend is implemented and its automated tests pass locally (`python -m pytest backend/test_main.py -q`, after installing `backend/requirements-dev.txt`); these tests mock the model and do not verify a live AI API connection. Cloud deployment is the next step. Study history is stored in the browser's local storage; use **Reset progress** to clear it.
 
 ## What it does
 
@@ -46,17 +45,17 @@ The approach is **reviewed notes first, AI for unmatched questions**. The prompt
 5. Set `window.STUDY_BUDDY_API_URL` in [config.js](./config.js) to the backend base URL, with no `/chat` suffix, then publish the updated static site.
 6. Submit an unmatched AZ-900 question and confirm the answer is labeled as AI-generated. If the backend is unavailable, reviewed topics and the original quiz remain usable.
 
-The API key must be entered in Render's environment settings, never in `config.js`, the GitHub repository, or the browser. The included in-memory rate limit is a basic demo safeguard, not production-grade abuse prevention; use provider spending limits and stronger rate limiting before broad public use. Learner questions sent to the backend are forwarded to Anthropic.
+The API key must be entered in Render's environment settings, never in `config.js`, the GitHub repository, or the browser. The included in-memory rate limit (5 AI questions per visitor and 20 overall per minute) is a basic demo safeguard, not production-grade abuse prevention; use provider spending limits and stronger rate limiting before broad public use. Learner questions sent to the backend are forwarded to Anthropic.
 
 The static frontend works with no backend configured. To run backend tests:
 
 ```powershell
 Set-Location backend
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-These checks cover health, explicit missing-configuration errors, request validation, mocked model interaction, rate limiting, and allowed GitHub Pages CORS. The content and interface label analogies, clarify that M-Pesa is not evidence of Azure hosting, caution that regions or generators alone do not guarantee recovery, and explain every incorrect quiz choice. Sheng is a first draft and needs review by fluent speakers.
+These checks cover health, explicit missing-configuration errors, request validation, mocked model interaction, per-visitor and overall rate limits, and allowed GitHub Pages CORS. The content and interface label analogies, clarify that M-Pesa is not evidence of Azure hosting, caution that regions or generators alone do not guarantee recovery, and explain every incorrect quiz choice. Sheng is a first draft and needs review by fluent speakers.
 
 ## Exam scope
 
@@ -74,7 +73,8 @@ The outline can change. Always compare your study plan with the [current Microso
 
 - `index.html` — accessible app layout and navigation
 - `styles.css` — responsive visual design
-- `app.js` — reviewed topic notes, English/Kiswahili/beta Sheng answers, level modes, original quiz questions, and local weak-topic tracking
+- `data.js` — study content: reviewed topic notes, English/Kiswahili/beta Sheng text, original quiz questions and distractor explanations
+- `app.js` — app logic: answering, level modes, quiz flow, language switching, and local weak-topic tracking
 - `config.js` — optional public backend URL; never place secrets here
 - `backend/main.py` — FastAPI AI fallback; provider secret stays in the host environment
 - `render.yaml` — Render Blueprint for deploying the optional API
