@@ -18,7 +18,7 @@ python -m http.server 8000
 
 Then visit <http://localhost:8000>.
 
-The GitHub Pages frontend is static and works without an account or backend. Reviewed topic answers and practice remain available without AI. **Live AI is not currently configured on the public demo**; unmatched questions use the offline fallback. The backend is implemented and its automated tests pass locally (`python -m pytest backend/test_main.py -q`, after installing `backend/requirements-dev.txt`); these tests mock the model and do not verify a live AI API connection. Cloud deployment is the next step. Study history is stored in the browser's local storage; use **Reset progress** to clear it.
+The GitHub Pages frontend is static and works without an account or backend. Reviewed topic answers and practice remain available without AI. **The public demo's AI tutor runs on Google Gemini's free tier through a Render free instance.** If it is asleep or Google is busy, the first answer can take up to a minute or fall back to the reviewed topics. The backend is implemented and its automated tests pass locally (`python -m pytest backend/test_main.py -q`, after installing `backend/requirements-dev.txt`); these tests mock the model and do not verify a live AI API connection. Cloud deployment is the next step. Study history is stored in the browser's local storage; use **Reset progress** to clear it.
 
 ## What it does
 
