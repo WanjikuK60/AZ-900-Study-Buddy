@@ -2,7 +2,7 @@
 
 - **🔗 Live demo:** https://wanjikuk60.github.io/az900-study-buddy/
 - **🎥 Video demo:** (add link)
-- **📊 Pitch deck:** (add link)
+- **📊 Pitch deck:** https://www.canva.com/d/yZtbOclS52LCbDQ
 
 > Unofficial study aid. Not affiliated with or endorsed by Microsoft.
 
