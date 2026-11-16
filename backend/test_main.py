@@ -10,6 +10,7 @@ client = TestClient(main.app)
 def setup_function() -> None:
     with main._rate_limit_lock:
         main._request_times.clear()
+        main._client_request_times.clear()
 
 
 def test_health_is_available_without_an_api_key() -> None:
@@ -71,6 +72,24 @@ def test_chat_rejects_requests_after_rate_limit(monkeypatch) -> None:
 
     assert first.status_code == 200
     assert second.status_code == 429
+
+
+def test_one_visitor_cannot_use_up_everyone_elses_quota(monkeypatch) -> None:
+    monkeypatch.setattr(main, "RATE_LIMIT_PER_CLIENT", 2)
+    monkeypatch.setattr(main, "generate_answer", lambda _payload: "A reviewed test answer.")
+    ask = lambda ip: client.post(
+        "/chat", json={"question": "Explain Azure regions"}, headers={"X-Forwarded-For": ip}
+    )
+
+    assert ask("10.0.0.1").status_code == 200
+    assert ask("10.0.0.1").status_code == 200
+    assert ask("10.0.0.1").status_code == 429  # this visitor is over their limit
+    assert ask("10.0.0.2").status_code == 200  # a different visitor still gets answers
+
+
+def test_visitor_id_uses_the_proxy_added_address() -> None:
+    request = SimpleNamespace(headers={"x-forwarded-for": "1.1.1.1, 203.0.113.9"}, client=None)
+    assert main.client_id(request) == "203.0.113.9"
 
 
 def test_chat_cors_allows_the_github_pages_site() -> None:

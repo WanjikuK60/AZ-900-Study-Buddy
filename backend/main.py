@@ -6,15 +6,19 @@ from enum import Enum
 from threading import Lock
 
 import anthropic
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger("study_buddy")
 
-RATE_LIMIT = 20
+# Two limits per rolling window: one per visitor, so a single person can't use up
+# everyone's quota, and one overall, which caps the API bill.
 RATE_WINDOW_SECONDS = 60
+RATE_LIMIT_PER_CLIENT = 5
+RATE_LIMIT = 20
 _request_times: deque[float] = deque()
+_client_request_times: dict[str, deque[float]] = {}
 _rate_limit_lock = Lock()
 
 SYSTEM_PROMPT = """You are Study Buddy, an independent, unofficial tutor for the public
@@ -80,14 +84,38 @@ class ChatResponse(BaseModel):
     answer: str
 
 
-def enforce_rate_limit() -> None:
+def client_id(request: Request) -> str:
+    """Best-effort visitor id. Behind Render's proxy the real address is the last
+    X-Forwarded-For entry (the one the proxy added), not one the client could fake."""
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[-1].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _prune(times: deque[float], now: float) -> None:
+    while times and now - times[0] >= RATE_WINDOW_SECONDS:
+        times.popleft()
+
+
+def enforce_rate_limit(client: str) -> None:
     now = time.monotonic()
     with _rate_limit_lock:
-        while _request_times and now - _request_times[0] >= RATE_WINDOW_SECONDS:
-            _request_times.popleft()
-        if len(_request_times) >= RATE_LIMIT:
+        _prune(_request_times, now)
+        client_times = _client_request_times.setdefault(client, deque())
+        _prune(client_times, now)
+
+        if len(client_times) >= RATE_LIMIT_PER_CLIENT or len(_request_times) >= RATE_LIMIT:
+            if not client_times:
+                del _client_request_times[client]
             raise HTTPException(status_code=429, detail="Please wait before asking another AI question.")
+
+        client_times.append(now)
         _request_times.append(now)
+
+        # Forget visitors who have been quiet for a whole window.
+        for key in [k for k, v in _client_request_times.items() if v and now - v[-1] >= RATE_WINDOW_SECONDS]:
+            del _client_request_times[key]
 
 
 def generate_answer(payload: ChatRequest) -> str:
@@ -141,6 +169,6 @@ def health() -> dict[str, str]:
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(payload: ChatRequest) -> ChatResponse:
-    enforce_rate_limit()
+def chat(payload: ChatRequest, request: Request) -> ChatResponse:
+    enforce_rate_limit(client_id(request))
     return ChatResponse(answer=generate_answer(payload))
